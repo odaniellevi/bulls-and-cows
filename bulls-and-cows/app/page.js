@@ -48,4 +48,31 @@ export default function JogoDaSenha() {
     setResultados((prev) => [novoResultado, ...prev]);
     setPalpite("");
   };
+
+  const reiniciarJogo = () => {
+    setNumeroSecreto(gerarNumeroSecreto());
+    setTentativas(0);
+    setResultados([]);
+    setPalpite("");
+  };
+
+  const mostrarCombinacao = () => {
+    alert(`A combinação secreta é: ${numeroSecreto}`);
+  };
+
+  return (
+    <div className = "flex flex-col items-center justify-center min-h-screen bg-indigo-950 text-white p-4">
+      <div className = "flex flex-col items-center justify-center bg-indigo-950 rounded-[50px] w-80 h-[30rem] gap-4">
+        <h1 className = "text-green-500 text-center text-2xl font-bold">JOGO DA SENHA</h1>
+        <p className = "text-lg">Digite um número de 4 dígitos</p>
+        <input
+          type="text"
+          placeholder="* * * *"
+          value={palpite}
+          onChange={(e) => setPalpite(e.target.value)}
+          className = "rounded-full text-center w-40 h-8 text-black placeholder-black"
+        />
+      </div>
+    </div>
+  )
 }
