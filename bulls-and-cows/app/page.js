@@ -16,4 +16,25 @@ export default function JogoDaSenha() {
     }
     return numero;
   }
+
+  const verificarTentativa = () => {
+    if (palpite.length !== 4 || new Set(palpite).size !== 4) {
+      setResultados((prev) => [
+        "Por favor, insira um número com 4 dígitos únicos",
+        ...prev
+      ]);
+      return;
+    }
+
+    let bulls = 0;
+    let cows = 0;
+
+    for (let i = 0; i < 4; i++) {
+      if (palpite[i] === numeroSecreto[i]) {
+        bulls++;
+      } else if (numeroSecreto.includes(palpite[i])) {
+        cows++;
+      }
+    }
+  }
 }
