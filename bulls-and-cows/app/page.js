@@ -72,6 +72,29 @@ export default function JogoDaSenha() {
           onChange={(e) => setPalpite(e.target.value)}
           className = "rounded-full text-center w-40 h-8 text-black placeholder-black"
         />
+        <button
+          onClick = {verificarTentativa}
+          className= "flex items-center justify-center w-40 h-12 bg-green-600 text-white rounded-full hover:bg-green-700"
+        >
+          VERIFICAR
+        </button>
+        <button
+          onClick={reiniciarJogo}
+          className= "flex items-center justify-center w-40 h-12 bg-red-600 text-white rounded-full hover:bg-red-700"
+        >
+          REINICIAR
+        </button>
+        <button
+          onClick={mostrarCombinacao}
+          className = "flex items-center justify-center w-40 h-12 bg-green-600 text-white rounded-full hover:bg-green-700"
+        >
+          MOSTRAR COMBINAÇÃO
+        </button>
+        <div className = "text-center overflow-y-auto w-72 max-h-40 border border-white p-2 box-border">
+          {resultados.map((res, idx) => (
+            <p key = {idx}>{res}</p>
+          ))}
+        </div>
       </div>
     </div>
   )
