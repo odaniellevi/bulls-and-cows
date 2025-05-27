@@ -36,5 +36,16 @@ export default function JogoDaSenha() {
         cows++;
       }
     }
-  }
+
+    const novaTentativa = tentativas + 1;
+    setTentativas(novaTentativa);
+
+    const novoResultado =
+      bulls === 4
+        ? `Parabéns! Você acertou o número secreto ${numeroSecreto} em ${novaTentativa} tentativas!`
+        : `Tentativa #${novaTentativa}: ${palpite} | Bulls: ${bulls}, Cows: ${cows}`;
+
+    setResultados((prev) => [novoResultado, ...prev]);
+    setPalpite("");
+  };
 }
