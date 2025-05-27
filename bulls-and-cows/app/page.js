@@ -7,6 +7,7 @@ export default function JogoDaSenha() {
   const [palpite, setPalpite] = useState("");
   const [tentativas, setTentativas] = useState(0);
   const [resultados, setResultados] = useState([]);
+  const [fimDeJogo, setFimDeJogo] = useState(false);
 
   function gerarNumeroSecreto() {
     let numero = "";
@@ -24,10 +25,12 @@ export default function JogoDaSenha() {
   }, []);
 
   const verificarTentativa = () => {
+    if (fimDeJogo) return; // não deixa jogar depois de acabar
+
     if (palpite.length !== 4 || new Set(palpite).size !== 4) {
       setResultados((prev) => [
         "Por favor insira um número com 4 dígitos únicos",
-        ...prev
+        ...prev,
       ]);
       return;
     }
@@ -46,12 +49,25 @@ export default function JogoDaSenha() {
     const novaTentativa = tentativas + 1;
     setTentativas(novaTentativa);
 
-    const novoResultado =
-      bulls === 4
-        ? `Parabéns! Você acertou o número secreto ${numeroSecreto} em ${novaTentativa} tentativas!`
-        : `Tentativa #${novaTentativa}: ${palpite} | Bulls: ${bulls}, Cows: ${cows}`;
+    if (bulls === 4) {
+      setResultados((prev) => [
+        `Parabéns! Você acertou o número secreto ${numeroSecreto} em ${novaTentativa} tentativas!`,
+        ...prev,
+      ]);
+      setFimDeJogo(true);
+    } else if (novaTentativa >= 10) {
+      setResultados((prev) => [
+        `Fim de jogo! Você atingiu 10 tentativas. A senha era: ${numeroSecreto}`,
+        ...prev,
+      ]);
+      setFimDeJogo(true);
+    } else {
+      setResultados((prev) => [
+        `Tentativa #${novaTentativa}: ${palpite} | Bulls: ${bulls}, Cows: ${cows}`,
+        ...prev,
+      ]);
+    }
 
-    setResultados((prev) => [novoResultado, ...prev]);
     setPalpite("");
   };
 
@@ -60,6 +76,7 @@ export default function JogoDaSenha() {
     setTentativas(0);
     setResultados([]);
     setPalpite("");
+    setFimDeJogo(false);
   };
 
   const mostrarCombinacao = () => {
@@ -75,27 +92,43 @@ export default function JogoDaSenha() {
           type="text"
           placeholder="* * * *"
           value={palpite}
+          maxLength={4}
           onChange={(e) => setPalpite(e.target.value)}
+          disabled={fimDeJogo}
           className="rounded-full text-center w-40 h-8 text-white placeholder-white-700"
         />
-        <button
-          onClick={verificarTentativa}
-          className="flex items-center justify-center w-40 h-12 bg-green-600 text-white rounded-full hover:bg-green-700"
-        >
-          VERIFICAR
-        </button>
-        <button
-          onClick={reiniciarJogo}
-          className="flex items-center justify-center w-40 h-12 bg-red-600 text-white rounded-full hover:bg-red-700"
-        >
-          REINICIAR
-        </button>
-        <button
-          onClick={mostrarCombinacao}
-          className="flex items-center justify-center w-40 h-12 bg-green-600 text-white rounded-full hover:bg-green-700"
-        >
-          MOSTRAR COMBINAÇÃO
-        </button>
+        {!fimDeJogo && (
+          <>
+            <button
+              onClick={verificarTentativa}
+              className="flex items-center justify-center w-40 h-12 bg-green-600 text-white rounded-full hover:bg-green-700"
+            >
+              VERIFICAR
+            </button>
+            <button
+              onClick={mostrarCombinacao}
+              className="flex items-center justify-center w-40 h-12 bg-green-600 text-white rounded-full hover:bg-green-700"
+            >
+              MOSTRAR COMBINAÇÃO
+            </button>
+          </>
+        )}
+        {fimDeJogo && (
+          <button
+            onClick={reiniciarJogo}
+            className="flex items-center justify-center w-40 h-12 bg-red-600 text-white rounded-full hover:bg-red-700"
+          >
+            NOVO JOGO
+          </button>
+        )}
+        {!fimDeJogo && tentativas > 0 && (
+          <button
+            onClick={reiniciarJogo}
+            className="flex items-center justify-center w-40 h-12 bg-red-600 text-white rounded-full hover:bg-red-700"
+          >
+            REINICIAR
+          </button>
+        )}
         <div className="text-center overflow-y-auto w-72 max-h-40 border border-white p-2 box-border">
           {resultados.map((res, idx) => (
             <p key={idx}>{res}</p>
